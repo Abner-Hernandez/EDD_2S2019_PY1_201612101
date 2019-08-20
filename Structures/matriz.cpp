@@ -293,6 +293,8 @@ void Matriz::guardarArchivo(std::string txtArchivo)
 
     nuevo.close();
     system("dot -Tpng matriz.dot -o grafica.png");
+    system("grafica.png");
+
 }
 
 
