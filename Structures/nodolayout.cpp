@@ -6,6 +6,7 @@ NodoLayout::NodoLayout()
     this->nameLayout = "";
     this->next = nullptr;
     this->previous = nullptr;
+    this->layout = new Matriz();
 }
 
 NodoLayout::NodoLayout(int numLay, std::string nameLay)
@@ -14,4 +15,5 @@ NodoLayout::NodoLayout(int numLay, std::string nameLay)
     this->nameLayout = nameLay;
     this->previous = nullptr;
     this->next = nullptr;
+    this->layout = new Matriz();
 }
