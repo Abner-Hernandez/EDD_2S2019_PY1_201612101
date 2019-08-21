@@ -204,33 +204,34 @@ void Matriz::graficar(std::string postGraph)
         txtArchivo ="";
         txtArchivo += "digraph Mass{\n";
         txtArchivo += "rankdir = TB; \n";
+        txtArchivo += "node[shape = rectangle, height = 0.5, width = 1]; \n";
+        txtArchivo += "graph[nodesep = 1.2]; \n";
+
         //txtArchivo += "subgraph cluster_0{\n";
         //txtArchivo += "matriz[color = green style= filled fontcolor = white ];\n";
 
         // ************************************************************   escribir nodos
 
         NodoMatriz *auxNext = this->header->next;
-        txtArchivo += "node[shape = record width=1 height=0.5 label= \"Header\"] header\n";
+        txtArchivo += "node[shape = record  label= \"Header\"]; header\n";
 
         while(auxNext != nullptr)
         {
-            txtArchivo += "node[shape = record width=1 height=0.5 label= ";
-            txtArchivo += "\"X = "+std::to_string(auxNext->x)+"\"";
-            txtArchivo += "] nodoX"+std::to_string(auxNext->x)+"\n";
+            txtArchivo += "node[label= \"X = "+std::to_string(auxNext->x)+"\"";
+            txtArchivo += "]; nodoX"+std::to_string(auxNext->x)+";\n";
             auxNext = auxNext->next;
         }
-        txtArchivo += "header -> nodoX"+std::to_string(this->header->next->x) + " [dir=\"both\"] \n";
+        txtArchivo += "header -> nodoX"+std::to_string(this->header->next->x) + " [constraint=false, dir=\"both\"]; \n";
 
         NodoMatriz *auxDown = this->header->down;
 
         while(auxDown != nullptr)
         {
-            txtArchivo += "node[shape = record width=1 height=0.5 label= ";
-            txtArchivo += "\"y = "+std::to_string(auxDown->y)+"\"";
-            txtArchivo += "] nodoY"+std::to_string(auxDown->y)+"\n";
+            txtArchivo += "node[label= \"y = "+std::to_string(auxDown->y)+"\"";
+            txtArchivo += "]; nodoY"+std::to_string(auxDown->y)+";\n";
             auxDown = auxDown->down;
         }
-        txtArchivo += "header -> nodoY"+std::to_string(this->header->down->y) + " [dir=\"both\"] \n";
+        txtArchivo += "header -> nodoY"+std::to_string(this->header->down->y) + " [ constraint=false, dir=\"both\"]; \n";
 
         auxDown = this->header->down;
 
@@ -238,9 +239,9 @@ void Matriz::graficar(std::string postGraph)
         {
             graficarRecursivo(auxDown->next,txtArchivo);
             if(auxDown->next != nullptr)
-                txtArchivo += "nodoY"+std::to_string(auxDown->y)+" -> "+ "nodoXY"+std::to_string(auxDown->next->x)+std::to_string(auxDown->next->y)+" [dir=\"both\"] \n";
+                txtArchivo += "nodoY"+std::to_string(auxDown->y)+" -> "+ "nodoXY"+std::to_string(auxDown->next->x)+std::to_string(auxDown->next->y)+" [constraint=false, dir=\"both\"]; \n";
             if(auxDown->down != nullptr)
-                txtArchivo += "nodoY"+std::to_string(auxDown->y)+" -> "+ "nodoY"+std::to_string(auxDown->down->y) + " [dir=\"both\"] \n";
+                txtArchivo += "nodoY"+std::to_string(auxDown->y)+" -> "+ "nodoY"+std::to_string(auxDown->down->y) + " [dir=\"both\"]; \n";
             auxDown = auxDown->down;
         }
 
@@ -254,15 +255,15 @@ void Matriz::graficar(std::string postGraph)
             while(aux != nullptr)
             {
                 if(aux->down != nullptr)
-                    txtArchivo += "nodoXY"+std::to_string(aux->x)+std::to_string(aux->y) +" -> "+ "nodoXY"+std::to_string(aux->down->x)+std::to_string(aux->down->y)+"\n";
+                    txtArchivo += "nodoXY"+std::to_string(aux->x)+std::to_string(aux->y) +" -> "+ "nodoXY"+std::to_string(aux->down->x)+std::to_string(aux->down->y)+"; \n";
                 aux = aux->down;
             }
 
             if (auxNext->down != nullptr)
-                txtArchivo += "nodoX"+std::to_string(auxNext->x)+" -> "+ "nodoXY"+std::to_string(auxNext->down->x)+std::to_string(auxNext->down->y)+" [dir=\"both\"] \n";
+                txtArchivo += "nodoX"+std::to_string(auxNext->x)+" -> "+ "nodoXY"+std::to_string(auxNext->down->x)+std::to_string(auxNext->down->y)+" [dir=\"both\"]; \n";
 
             if(auxNext->next != nullptr)
-                txtArchivo += "nodoX"+std::to_string(auxNext->x)+" -> "+ "nodoX"+std::to_string(auxNext->next->x) + " [dir=\"both\"] \n";
+                txtArchivo += "nodoX"+std::to_string(auxNext->x)+" -> "+ "nodoX"+std::to_string(auxNext->next->x) + " [dir=\"both\"]; \n";
             auxNext = auxNext->next;
         }
 
@@ -275,7 +276,7 @@ void Matriz::graficar(std::string postGraph)
             txtArchivo += "nodoX"+std::to_string(auxNext->x)+ " ";
             auxNext = auxNext->next;
         }
-        txtArchivo += "}\n";
+        txtArchivo += "};\n";
 
         auxDown = this->header->down;
         while(auxDown != nullptr)
@@ -288,7 +289,7 @@ void Matriz::graficar(std::string postGraph)
                 txtArchivo += "nodoXY"+std::to_string(auxNext->x)+std::to_string(auxNext->y) +" ";
                 auxNext = auxNext->next;
             }
-            txtArchivo += "}\n";
+            txtArchivo += "};\n";
             auxDown = auxDown->down;
         }
 
@@ -303,16 +304,16 @@ void Matriz::graficarRecursivo(NodoMatriz*& nodo, std::string &txtArchivo)
 {
     if(nodo != nullptr)
     {
-        txtArchivo += "node[shape = record width=1 height=0.5 label= ";
+        txtArchivo += "node[label= ";
         txtArchivo += "\"R:"+std::to_string(nodo->r) + ", G:" +std::to_string(nodo->g) + ", B:" +std::to_string(nodo->b) +"\"";
-        txtArchivo += "] nodoXY"+std::to_string(nodo->x)+std::to_string(nodo->y)+";\n";
+        txtArchivo += "]; nodoXY"+std::to_string(nodo->x)+std::to_string(nodo->y)+";\n";
 
     }else if(nodo == nullptr)
         return;
 
     graficarRecursivo(nodo->next , txtArchivo);
     if(nodo->next != nullptr)
-        txtArchivo += "nodoXY"+std::to_string(nodo->x)+std::to_string(nodo->y) +" -> "+ "nodoXY"+std::to_string(nodo->next->x)+std::to_string(nodo->next->y)+" [dir=\"both\"] \n";
+        txtArchivo += "nodoXY"+std::to_string(nodo->x)+std::to_string(nodo->y) +" -> "+ "nodoXY"+std::to_string(nodo->next->x)+std::to_string(nodo->next->y)+" [ constraint=false, dir=\"both\"]; \n";
 }
 
 void Matriz::guardarArchivo(std::string txtArchivo, std::string postGraph)
