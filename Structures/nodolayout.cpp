@@ -17,3 +17,12 @@ NodoLayout::NodoLayout(int numLay, std::string nameLay)
     this->next = nullptr;
     this->layout = new Matriz();
 }
+
+NodoLayout::NodoLayout(int numLay, std::string nameLay, Matriz *& lay)
+{
+    this->numLayout =numLay;
+    this->nameLayout = nameLay;
+    this->previous = nullptr;
+    this->next = nullptr;
+    this->layout = lay;
+}

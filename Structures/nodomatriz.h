@@ -1,6 +1,6 @@
 #ifndef NODOMATRIZ_H
 #define NODOMATRIZ_H
-
+#include <string>
 
 class NodoMatriz
 {

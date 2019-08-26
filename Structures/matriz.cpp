@@ -196,6 +196,29 @@ void Matriz::deleteM(int x, int y)
     }
 }
 
+void Matriz::modify(int x, int y, int r, int g, int b)
+{
+    NodoMatriz *aux = this->header->next;
+    while(aux != nullptr)
+    {
+        if(aux->x == x)
+        {
+            NodoMatriz *auxY = aux->down;
+            while (auxY != nullptr)
+            {
+                if(auxY->y == y)
+                {
+                    auxY->r = r;
+                    auxY->g = g;
+                    auxY->b = b;
+                }
+                auxY = auxY->down;
+            }
+        }
+        aux = aux->next;
+    }
+}
+
 void Matriz::graficar(std::string postGraph)
 {
     if(this->header->next != nullptr || this->header->down != nullptr)
@@ -206,11 +229,6 @@ void Matriz::graficar(std::string postGraph)
         txtArchivo += "rankdir = TB; \n";
         txtArchivo += "node[shape = rectangle, height = 1, width = 1]; \n";
         txtArchivo += "graph[nodesep = 0.5]; \n";
-
-        //txtArchivo += "subgraph cluster_0{\n";
-        //txtArchivo += "matriz[color = green style= filled fontcolor = white ];\n";
-
-        // ************************************************************   escribir nodos
 
         NodoMatriz *auxNext = this->header->next;
         txtArchivo += "header[shape = record  label= \"Header\"]; \n";
@@ -247,8 +265,6 @@ void Matriz::graficar(std::string postGraph)
 
         auxNext = this->header->next;
 
-//Modificar **********************************
-
         while(auxNext != nullptr)
         {
             NodoMatriz *aux = auxNext->down;
@@ -267,7 +283,7 @@ void Matriz::graficar(std::string postGraph)
             auxNext = auxNext->next;
         }
 
-        // Alinear
+        // Align
         auxNext = this->header->next;
 
         txtArchivo += "{ rank=same; header ";
@@ -326,6 +342,5 @@ void Matriz::guardarArchivo(std::string txtArchivo, std::string postGraph)
     system(("dot -Tpng matriz.dot -o grafica"+ postGraph +".png").c_str());
     system(("grafica" + postGraph + ".png").c_str());
 }
-
 
 

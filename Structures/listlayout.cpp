@@ -8,7 +8,17 @@ ListLayout::ListLayout()
 void ListLayout::insertar(int numLay, std::string nameLay)
 {
     NodoLayout *nuevo = new NodoLayout(numLay, nameLay);
+    this->insertar(numLay,nuevo);
+}
 
+void ListLayout::insertar(int numLay, std::string nameLay, Matriz *&lay)
+{
+    NodoLayout *nuevo = new NodoLayout(numLay, nameLay, lay);
+    this->insertar(numLay,nuevo);
+}
+
+void ListLayout::insertar(int numLay, NodoLayout *&nuevo)
+{
     if(this->primero == nullptr)
         this->primero = nuevo;
     else

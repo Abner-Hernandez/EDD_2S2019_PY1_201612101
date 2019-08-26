@@ -12,7 +12,7 @@ public:
     Matriz *layout;
     std::string nameLayout;
     NodoLayout(int numLay, std::string nameLay);
-
+    NodoLayout(int numLay, std::string nameLay, Matriz *& lay);
 };
 
 #endif // NODOLAYOUT_H

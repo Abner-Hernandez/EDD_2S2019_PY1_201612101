@@ -25,3 +25,5 @@ NodoMatriz::NodoMatriz(int x, int y , int r, int g, int b)
     this->next = nullptr;
     this->previous = nullptr;
 }
+
+
