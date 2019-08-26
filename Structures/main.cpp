@@ -55,6 +55,8 @@ int main()
     nuevo->insertarNodo(c8);
     nuevo->graficarArbol();
     nuevo->graficarInorder();
+    nuevo->graficarPreOrden();
+    nuevo->graficarPostOrden();
 
 
     //menu(estructs);

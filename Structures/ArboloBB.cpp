@@ -171,26 +171,33 @@ void ArbolBB::graficarInorder()
 {
     std::string txtArchivo;
     txtArchivo ="";
-    txtArchivo += "digraph Mass{\n";
-    txtArchivo += "node[shape = rectangle, height = 0.5, width = 1]; \n";
+    txtArchivo += "digraph Mass{\n rankdir=LR; \n";
+    txtArchivo += "node[shape = record, height = 0.5, width = 1]; \n";
     txtArchivo += "graph[nodesep = 0.5]; \n";
-    graficarInorder(this->Raiz, txtArchivo, "");
+    ListCircularDE *nueva = new ListCircularDE();
+    graficarInorder(this->Raiz, txtArchivo, nueva);
+    Nodo *aux = nueva->primero;
+    do
+    {
+        if(aux->next != nueva->primero)
+            txtArchivo += aux->nameNodo + "->" + aux->next->nameNodo+ "\n";
+        aux = aux->next;
+    }while(aux != nueva->primero);
     txtArchivo += "}";
     GuardandoArchivo(txtArchivo, "inorder");
 }
 
-void ArbolBB::graficarInorder(NodoAB *&pivote, std::string &txtArchivo, std::string imagePrevious)
+void ArbolBB::graficarInorder(NodoAB *&pivote, std::string &txtArchivo, ListCircularDE *& lista)
 {
     if(pivote == nullptr)
         return;
     else
     {
-        graficarInorder(pivote->nIzquierdo, txtArchivo, pivote->nuevo->imageName);
+        graficarInorder(pivote->nIzquierdo, txtArchivo, lista);
         txtArchivo += pivote->nuevo->imageName+"[label= \"";
         txtArchivo += " Image: "+pivote->nuevo->imageName+ "\"];\n";
-        if (pivote != this->Raiz)
-            txtArchivo += pivote->nuevo->imageName + " ->" + imagePrevious + "\n";
-        graficarInorder(pivote->nDerecho, txtArchivo, pivote->nuevo->imageName);
+        lista->insertar(pivote->nuevo->imageName);
+        graficarInorder(pivote->nDerecho, txtArchivo, lista);
     }
 
 }
@@ -199,26 +206,33 @@ void ArbolBB::graficarPostOrden()
 {
     std::string txtArchivo;
     txtArchivo ="";
-    txtArchivo += "digraph Mass{\n";
+    txtArchivo += "digraph Mass{\n rankdir=LR; \n";
     txtArchivo += "node[shape = record, height = 0.5, width = 1]; \n";
     txtArchivo += "graph[nodesep = 0.5]; \n";
-    graficarPostOrden(this->Raiz, txtArchivo, "");
+    ListCircularDE *nueva = new ListCircularDE();
+    graficarPostOrden(this->Raiz, txtArchivo, nueva);
+    Nodo *aux = nueva->primero;
+    do
+    {
+        if(aux->next != nueva->primero)
+            txtArchivo += aux->nameNodo + "->" + aux->next->nameNodo+ "\n";
+        aux = aux->next;
+    }while(aux != nueva->primero);
     txtArchivo += "}";
     GuardandoArchivo(txtArchivo, "postorden");
 }
 
-void ArbolBB::graficarPostOrden(NodoAB *&pivote, std::string &txtArchivo, std::string imagePrevious)
+void ArbolBB::graficarPostOrden(NodoAB *&pivote, std::string &txtArchivo, ListCircularDE *& lista)
 {
     if(pivote == nullptr)
         return;
     else
     {
-        graficarPostOrden(pivote->nIzquierdo, txtArchivo, pivote->nuevo->imageName);
-        graficarPostOrden(pivote->nDerecho, txtArchivo, pivote->nuevo->imageName);
+        graficarPostOrden(pivote->nIzquierdo, txtArchivo, lista);
+        graficarPostOrden(pivote->nDerecho, txtArchivo, lista);
         txtArchivo += pivote->nuevo->imageName+"[label= \"";
         txtArchivo += " Image: "+pivote->nuevo->imageName+ "\"];\n";
-        if (pivote != this->Raiz)
-            txtArchivo += imagePrevious+ " ->" + pivote->nuevo->imageName + "\n";
+        lista->insertar(pivote->nuevo->imageName);
     }
 
 }
@@ -227,15 +241,23 @@ void ArbolBB::graficarPreOrden()
 {
     std::string txtArchivo;
     txtArchivo ="";
-    txtArchivo += "digraph Mass{\n";
+    txtArchivo += "digraph Mass{\n rankdir=LR; \n";
     txtArchivo += "node[shape = record, height = 0.5, width = 1]; \n";
     txtArchivo += "graph[nodesep = 0.5]; \n";
-    graficarPreOrden(this->Raiz, txtArchivo, "");
+    ListCircularDE *nueva = new ListCircularDE();
+    graficarPreOrden(this->Raiz, txtArchivo, nueva);
+    Nodo *aux = nueva->primero;
+    do
+    {
+        if(aux->next != nueva->primero)
+            txtArchivo += aux->nameNodo + "->" + aux->next->nameNodo+ "\n";
+        aux = aux->next;
+    }while(aux != nueva->primero);
     txtArchivo += "}";
     GuardandoArchivo(txtArchivo, "preorden");
 }
 
-void ArbolBB::graficarPreOrden(NodoAB *&pivote, std::string &txtArchivo, std::string imagePrevious)
+void ArbolBB::graficarPreOrden(NodoAB *&pivote, std::string &txtArchivo, ListCircularDE *& lista)
 {
     if(pivote == nullptr)
         return;
@@ -243,10 +265,9 @@ void ArbolBB::graficarPreOrden(NodoAB *&pivote, std::string &txtArchivo, std::st
     {
         txtArchivo += pivote->nuevo->imageName+"[label= \"";
         txtArchivo += " Image: "+pivote->nuevo->imageName+ "\"];\n";
-        if (pivote != this->Raiz)
-            txtArchivo += imagePrevious+ " ->" + pivote->nuevo->imageName + "\n";
-        graficarPreOrden(pivote->nIzquierdo, txtArchivo, pivote->nuevo->imageName);
-        graficarPreOrden(pivote->nDerecho, txtArchivo, pivote->nuevo->imageName);
+        lista->insertar(pivote->nuevo->imageName);
+        graficarPreOrden(pivote->nIzquierdo, txtArchivo, lista);
+        graficarPreOrden(pivote->nDerecho, txtArchivo, lista);
     }
 
 }
