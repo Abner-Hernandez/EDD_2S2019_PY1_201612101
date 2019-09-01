@@ -5,7 +5,7 @@ ListFilters::ListFilters()
     this->primero = nullptr;
 }
 
-void ListFilters::insertar(std::string nameFilter, ListLayout *filter)
+void ListFilters::insertar(std::string nameFilter, CubeImage filter)
 {
     NodoFilter *nuevo = new NodoFilter(filter, nameFilter);
 

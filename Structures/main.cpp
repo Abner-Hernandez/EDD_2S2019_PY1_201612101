@@ -1,16 +1,21 @@
 #include "ArboloBB.h"
 #include "listfilters.h"
 #include <stdlib.h>
+#include <sys/stat.h>
 
 using namespace std;
 
-void menu(CubeImage *&estructs);
-void sub_menu1(CubeImage *&estructs);
-void fileConfig(CubeImage *&estructs);
-void leerCapas(CubeImage *&estructs);
-void crearFilter(int numFilter , ListFilters *filters, CubeImage *&estructs);
-void mirrorX(Matriz *& original, Matriz *& mirror);
-void mirrorY(Matriz *& original, Matriz *& mirror);
+void menu(CubeImage *&imageNew, ArbolBB *&images, ListFilters *&filters);
+void sub_menu1(CubeImage *&imageNew, ArbolBB *&images);
+void sub_menu2(CubeImage *&imageNew, ArbolBB *&images);
+void crearFilter(ListFilters *&filters, CubeImage *&imageNew);
+void sub_menu4(CubeImage *&imageNew, ListFilters *filters);
+void sub_menu5(CubeImage *&imageNew, ListFilters *filters);
+
+void fileConfig(CubeImage *&imageNew);
+void leerCapas(CubeImage *&imageNew);
+void mirrorX(Matriz *& original, Matriz *& mirror, int maxX);
+void mirrorY(Matriz *& original, Matriz *& mirror, int height);
 void collage(Matriz *& original, Matriz *& collage, int x, int y);
 void grayscale(Matriz *& grayscale);
 void negative(Matriz *& negative);
@@ -19,47 +24,56 @@ string numHex(int num);
 string RGBToHex(int rNum, int gNum, int bNum);
 void RGBToGrayscale(int &r, int &g, int &b);
 void RGBToNegative(int &r, int &g, int &b);
-
+void fileHTML(CubeImage cube);
+void fileCSS(CubeImage *imageNew, string fileName);
+void getNumInter(int &num, int lS, int lI);
+Matriz*& listLayauts(CubeImage *layouts);
+CubeImage &listFilters(ListFilters *&filters);
+void GuardandoArchivo(string txtArchivo, string tipeFile, string nameFile);
+void createFile(string path);
 
 
 int main()
 {
-    CubeImage *estructs = new CubeImage();
-    //ListFilters *filters = new ListFilters();
+    createFile("Exports");
+    CubeImage *imageNew = new CubeImage();
+    ArbolBB *images = new ArbolBB();
+    ListFilters *filters = new ListFilters();
     cout << "\"Hello World!\"" << endl;
-    ArbolBB *nuevo = new ArbolBB;
+
+    /*
     CubeImage *c1 = new CubeImage();
-    c1->imageName = "image10";
+    c1->imageName = "image10.csv";
     CubeImage *c2 = new CubeImage();
-    c2->imageName = "image5";
+    c2->imageName = "image5.csv";
     CubeImage *c3 = new CubeImage();
-    c3->imageName = "image15";
+    c3->imageName = "image15.csv";
     CubeImage *c4 = new CubeImage();
-    c4->imageName = "image7";
+    c4->imageName = "image7.csv";
     CubeImage *c5 = new CubeImage();
-    c5->imageName = "image11";
+    c5->imageName = "image11.csv";
     CubeImage *c6 = new CubeImage();
-    c6->imageName = "image02";
+    c6->imageName = "image02.csv";
     CubeImage *c7 = new CubeImage();
-    c7->imageName = "image05";
+    c7->imageName = "image05.csv";
     CubeImage *c8 = new CubeImage();
-    c8->imageName = "image00";
+    c8->imageName = "image00.csv";
 
-    nuevo->insertarNodo(c1);
-    nuevo->insertarNodo(c2);
-    nuevo->insertarNodo(c3);
-    nuevo->insertarNodo(c4);
-    nuevo->insertarNodo(c5);
-    nuevo->insertarNodo(c6);
-    nuevo->insertarNodo(c7);
-    nuevo->insertarNodo(c8);
-    nuevo->graficarArbol();
-    nuevo->graficarInorder();
-    nuevo->graficarPreOrden();
-    nuevo->graficarPostOrden();
+    images->insertarNodo(c1);
+    images->insertarNodo(c2);
+    images->insertarNodo(c3);
+    images->insertarNodo(c4);
+    images->insertarNodo(c5);
+    images->insertarNodo(c6);
+    images->insertarNodo(c7);
+    images->insertarNodo(c8);
+    //images->graficarArbol();
+    //nuevo->graficarInorder();
+    //nuevo->graficarPreOrden();
+    //nuevo->graficarPostOrden();
+    */
 
-
-    //menu(estructs);
+    menu(imageNew, images, filters);
 
     /*
     Matriz *matriz = new Matriz();
@@ -88,13 +102,34 @@ int main()
     return 0;
 }
 
-void menu(CubeImage *&estructs)
+void getNumInter(int &num, int lS, int lI)
+{
+    try {
+        cin >> num;
+    } catch (exception e) {
+        cout << "la tecla seleccionada no es valida\n";
+    }
+
+    while( num < lI || num > lS )
+    {
+        cout << "Digite una opcion de Valida\n";
+        try {
+            cin >> num;
+        } catch (exception e) {
+            cout << "la tecla seleccionada no es valida \n Digite una opcion de nuevo";
+            num = 9;
+        }
+    }
+}
+
+
+void menu(CubeImage *&imageNew, ArbolBB *&images, ListFilters *&filters)
 {
     while(true)
     {
         system("cls");
 
-        cout << "***************Menu***************\n";
+        cout << "***************MENU***************\n";
         cout << "*  1 - Insert Image              *\n";
         cout << "*  2 - Select Image              *\n";
         cout << "*  3 - Apply filters             *\n";
@@ -106,33 +141,18 @@ void menu(CubeImage *&estructs)
         cout << "\nIngrese la Opcion deseada\n";
 
         int entrada;
-        try {
-            cin >> entrada;
-        } catch (exception e) {
-            cout << "la tecla seleccionada no es valida\n";
-        }
-
-        while( entrada < 1 || entrada > 7 )
-        {
-            cout << "Digite una opcion de Valida\n";
-            try {
-                cin >> entrada;
-            } catch (exception e) {
-                cout << "la tecla seleccionada no es valida \n Digite una opcion de nuevo";
-                entrada = 9;
-            }
-        }
+        getNumInter(entrada,7,1);
 
         switch (entrada) {
-        case 1: sub_menu1(estructs);
+        case 1: sub_menu1(imageNew, images);
             break;
-        case 2:
+        case 2: sub_menu2(imageNew, images); filters = new ListFilters();
             break;
-        case 3:
+        case 3: crearFilter(filters, imageNew);
             break;
-        case 4:
+        case 4: sub_menu4(imageNew,filters);
             break;
-        case 5:
+        case 5:sub_menu5(imageNew,filters);
             break;
         case 6:
             break;
@@ -143,15 +163,18 @@ void menu(CubeImage *&estructs)
 
 }
 
-void sub_menu1(CubeImage *&estructs)
+//****************************************************sub_menu1
+void sub_menu1(CubeImage *&imageNew, ArbolBB *&images)
 {
-
+    //ini imageNew
+    imageNew = new CubeImage();
+    //***** Read first file ******
     while (true)
     {
         system("cls");
         bool layer = false, firstword = false;
         cout << "ingrese la direccion del archivo\n";
-        string path, contenido, nameLayer, file = "";
+        string path, contenido, nameLayer, file = "", nameImage;
         cin >> path;
         bool character = false;
         for (int i = static_cast<int>(path.length()-1) ; i >= 0 ; i--) {
@@ -159,8 +182,11 @@ void sub_menu1(CubeImage *&estructs)
                 character = true;
             if(character)
                 file = path[i] + file;
+            else
+                nameImage = path[i] + nameImage;
         }
-        estructs->pathImage = path;
+        imageNew->pathImage = file;
+        imageNew->imageName = nameImage;
         int numLayer = 0;
         if(path.substr(path.find_last_of(".") + 1) == "csv")
         {
@@ -199,25 +225,27 @@ void sub_menu1(CubeImage *&estructs)
                                 numLayer = stoi(word);
                             else
                                 nameLayer = word;
-                            estructs->layouts->insertar(numLayer,nameLayer);
+                            imageNew->layouts->insertar(numLayer,nameLayer);
                             word = "";
 
                         }else
                             word = word + x;
                     }
                 }
-                system("PAUSE");
             } catch (exception e) {}
         }else
               continue;
         break;
     }
-
+    //***** Read file Config ******
+    fileConfig(imageNew);
+    leerCapas(imageNew);
+    images->insertarNodo(imageNew);
 }
 
-void fileConfig(CubeImage *&estructs)
+void fileConfig(CubeImage *&imageNew)
 {
-    string path = estructs->layouts->primero->nameLayout, contenido;
+    string path = imageNew->pathImage + imageNew->layouts->primero->nameLayout, contenido;
     bool firstword = false, config = false;
     int valor = -1;
     if(path.substr(path.find_last_of(".") + 1) == "csv")
@@ -237,7 +265,7 @@ void fileConfig(CubeImage *&estructs)
                     {
                         if (firstword == false)
                         {
-                            if(word == "layer")
+                            if(word == "config")
                                 config = true;
                             firstword = true;
                             word = "";
@@ -249,13 +277,13 @@ void fileConfig(CubeImage *&estructs)
                             else
                             {
                                 if(word == "image_width")
-                                    estructs->image_width = -1;
+                                    imageNew->image_width = -1;
                                 else if(word == "image_height")
-                                    estructs->image_height = -1;
+                                    imageNew->image_height = -1;
                                 else if(word == "pixel_width")
-                                    estructs->pixel_width = -1;
+                                    imageNew->pixel_width = -1;
                                 else if(word == "pixel_height")
-                                    estructs->pixel_height = -1;
+                                    imageNew->pixel_height = -1;
                             }
                             word = "";
                         }
@@ -265,24 +293,24 @@ void fileConfig(CubeImage *&estructs)
                         if(config == false)
                         {
                             if(word == "image_width")
-                                estructs->image_width = valor;
+                                imageNew->image_width = valor;
                             else if(word == "image_height")
-                                estructs->image_height = valor;
+                                imageNew->image_height = valor;
                             else if(word == "pixel_width")
-                                estructs->pixel_width = valor;
+                                imageNew->pixel_width = valor;
                             else if(word == "pixel_height")
-                                estructs->pixel_height = valor;
+                                imageNew->pixel_height = valor;
                         }
                         else
                         {
-                            if(estructs->image_width == -1)
-                                estructs->image_width = valor;
-                            else if(estructs->image_height == -1)
-                                estructs->image_height = valor;
-                            else if(estructs->pixel_width == -1)
-                                estructs->pixel_width = valor;
-                            else if(estructs->pixel_height == -1)
-                                estructs->pixel_height = valor;
+                            if(imageNew->image_width == -1)
+                                imageNew->image_width = stoi(word);
+                            else if(imageNew->image_height == -1)
+                                imageNew->image_height = stoi(word);
+                            else if(imageNew->pixel_width == -1)
+                                imageNew->pixel_width = stoi(word);
+                            else if(imageNew->pixel_height == -1)
+                                imageNew->pixel_height = stoi(word);
                         }
                         word = "";
 
@@ -290,20 +318,19 @@ void fileConfig(CubeImage *&estructs)
                         word = word + x;
                 }
             }
-            system("PAUSE");
         } catch (exception e) {}
     }
 }
 
-void leerCapas(CubeImage *&estructs)
+void leerCapas(CubeImage *&imageNew)
 {
-    if(estructs->layouts->primero != nullptr)
+    if(imageNew->layouts->primero != nullptr)
     {
-        NodoLayout *aux = estructs->layouts->primero->next;
-        while(aux != estructs->layouts->primero)
+        NodoLayout *aux = imageNew->layouts->primero->next;
+        while(aux != imageNew->layouts->primero)
         {
-            string path = aux->nameLayout, contenido;
-            int x = 0, y = 0;
+            string path = imageNew->pathImage + aux->nameLayout, contenido;
+            int x = 1, y = 1;
             try
             {
                 ifstream file(path);
@@ -317,114 +344,225 @@ void leerCapas(CubeImage *&estructs)
                         char c = contenido[i];
                         if (c == ',' || i == tam-1)
                         {
-                            if(word != "x")
+                            if(word != "x" && word != "")
                             {
-                                int r = -1 , g = -1 , b = -1, ini = 0;
-                                for (int j = 0; j < static_cast<int>(word.length())  ; j++) {
-                                    if(word[j] == '-')
+                                int r = -1 , g = -1 , b = -1, ini = 0, tWord = static_cast<int>(word.length());
+                                for (int j = 0; j < tWord  ; j++) {
+                                    if(word[j] == '-' or j == tWord -1)
                                     {
                                         try {
                                             if(r == -1)
-                                                r = stoi(word.substr(ini, j-1));
+                                                r = stoi(word.substr(ini, j));
                                             else if(g == -1)
-                                                g = stoi(word.substr(ini, j-1));
+                                                g = stoi(word.substr(ini, j));
                                             else if(b == -1)
                                             {
-                                                b = stoi(word.substr(ini, j-1));
+                                                b = stoi(word.substr(ini, j));
                                                 aux->layout->add(x,y,r,g,b);
                                             }
-                                        } catch (exception e) {}
+                                        } catch (exception e) {cout << "error";}
                                         ini = j+1;
                                     }
                                 }
                             }
-                                x++;
-                                if(i == tam-1)
-                                    y++;
+                            x++;
+                            word = "";
+                            if(i == tam-1)
+                            {
+                                y++;
+                                x = 1;
+                            }
                         }else
                             word = word + c;
                     }
                 }
             } catch (exception e) {}
+            //aux->layout->graficar(aux->nameLayout);
             aux = aux->next;
         }
     }
 }
 
-void crearFilter(int numFilter , ListFilters *filters, CubeImage *&estructs)
+//****************************************************sub_menu2
+void sub_menu2(CubeImage *&imageNew, ArbolBB *&images)
 {
-    ListLayout *layouts = new ListLayout();
+    imageNew = new CubeImage();
+    ListCircularDE *imagesNames = new ListCircularDE();
+    images->getImages(imagesNames);
+    int cont = 1;
+    system("cls");
+    cout << "***************IMAGES***************\n";
+    Nodo *aux = imagesNames->primero;
+    do
+    {
+        cout << to_string(cont) + " - " + aux->nameNodo.substr(0,aux->nameNodo.size()-4) + "\n";
+        cont += 1;
+        aux = aux->next;
+    }while(aux != imagesNames->primero);
+    cout << "\nIngrese la Opcion deseada\n";
 
-    if(numFilter == 0)
+    int entrada;
+    getNumInter(entrada,cont,1);
+    aux = imagesNames->primero;
+    for (int i = 1; i < entrada ; i++)
+        aux = aux->next;
+    images->getImage(imageNew, aux->nameNodo);
+}
+
+//****************************************************sub_menu3
+void crearFilter(ListFilters *&filters, CubeImage *&imageNew)
+{
+    if(imageNew->imageName != "")
     {
-        NodoLayout *auxLayer = estructs->layouts->primero;
-        do
+        CubeImage imageFilter = *imageNew;
+        system("cls");
+        cout << "***************Filters***************\n";
+        cout << "1 - Grayscale\n";
+        cout << "2 - Negative\n";
+        cout << "3 - X-Mirror\n";
+        cout << "4 - Y-Mirror\n";
+        cout << "5 - Double Mirror\n";
+        cout << "6 - Collage\n";
+        int entrada;
+        getNumInter(entrada,6,1);
+        int x = 0, y = 0;
+        if(entrada == 6)
         {
-            Matriz *nueva = new Matriz();
-            nueva = auxLayer->layout;
-            grayscale(nueva);
-            layouts->insertar(auxLayer->numLayout,auxLayer->nameLayout, nueva);
-            auxLayer = auxLayer->next;
-        }while(auxLayer != estructs->layouts->primero);
-       filters->insertar("grayscale", layouts);
-    }else if(numFilter == 1)
-    {
-        NodoLayout *auxLayer = estructs->layouts->primero;
-        do
+            cout << "Enter the repetitions in X: ";
+            getNumInter(x,100,0);
+            cout << "\nEnter the repetitions in Y: ";
+            getNumInter(y,100,0);
+        }
+        cout << "\n\n*************filter type*************\n";
+        cout << "1 - Full Image\n";
+        cout << "2 - A Layout\n";
+        int type;
+        getNumInter(type,2,1);
+
+        if(type == 1)
         {
-            Matriz *nueva = new Matriz();
-            nueva = auxLayer->layout;
-            negative(nueva);
-            layouts->insertar(auxLayer->numLayout,auxLayer->nameLayout, nueva);
-            auxLayer = auxLayer->next;
-        }while(auxLayer != estructs->layouts->primero);
-       filters->insertar("negative", layouts);
-    }else if(numFilter == 2)
-    {
-        //create layers
-        NodoLayout *auxLayer = estructs->layouts->primero;
-        do
+            if(entrada == 1)
+            {
+                NodoLayout *auxLayer = imageFilter.layouts->primero->next;
+                do
+                {
+                    grayscale(auxLayer->layout);
+                    auxLayer = auxLayer->next;
+                }while(auxLayer != imageNew->layouts->primero);
+               filters->insertar("grayscale", imageFilter);
+            }else if(entrada == 2)
+            {
+                NodoLayout *auxLayer = imageFilter.layouts->primero->next;
+                do
+                {
+                    negative(auxLayer->layout);
+                    auxLayer = auxLayer->next;
+                }while(auxLayer != imageNew->layouts->primero);
+               filters->insertar("negative", imageFilter);
+            }else if(entrada == 3)
+            {
+                //create layers
+                NodoLayout *auxLayer = imageFilter.layouts->primero->next;
+                do
+                {
+                    Matriz *nueva = new Matriz();
+                    mirrorX(auxLayer->layout,nueva , imageNew->image_width);
+                    auxLayer->layout = nueva;
+                    auxLayer = auxLayer->next;
+                }while(auxLayer != imageNew->layouts->primero);
+               filters->insertar("mirrorX", imageFilter);
+            }else if(entrada == 4)
+            {
+                NodoLayout *auxLayer = imageFilter.layouts->primero->next;
+                do
+                {
+                    Matriz *nueva = new Matriz();
+                    mirrorY(auxLayer->layout,nueva, imageFilter.image_height);
+                    auxLayer->layout = nueva;
+                    auxLayer = auxLayer->next;
+                }while(auxLayer != imageNew->layouts->primero);
+               filters->insertar("mirrorY", imageFilter);
+            }else if(entrada == 5)
+            {
+                NodoLayout *auxLayer = imageFilter.layouts->primero->next;
+                do
+                {
+                    Matriz *nueva = new Matriz();
+                    Matriz *nuevaXY = new Matriz();
+                    mirrorX(auxLayer->layout,nueva, imageNew->image_width);
+                    mirrorY(nueva,nuevaXY, imageFilter.image_height);
+                    auxLayer->layout = nuevaXY;
+                    auxLayer = auxLayer->next;
+                }while(auxLayer != imageNew->layouts->primero);
+               filters->insertar("mirrorXY", imageFilter);
+            }else if(entrada == 6)
+            {
+                NodoLayout *auxLayer = imageFilter.layouts->primero->next;
+                do
+                {
+                    Matriz *nueva = new Matriz();
+                    collage(auxLayer->layout,nueva, x, y);
+                    auxLayer->layout = nueva;
+                    auxLayer = auxLayer->next;
+                }while(auxLayer != imageNew->layouts->primero);
+                if(x > 0)
+                    imageFilter.image_width = imageFilter.image_width*x;
+                if(y > 0)
+                    imageFilter.image_height = imageFilter.image_height*y;
+               filters->insertar("collage", imageFilter);
+            }
+        }else
         {
-            Matriz *nueva = new Matriz();
-            mirrorX(auxLayer->layout,nueva);
-            layouts->insertar(auxLayer->numLayout,auxLayer->nameLayout, nueva);
-            auxLayer = auxLayer->next;
-        }while(auxLayer != estructs->layouts->primero);
-       filters->insertar("mirrorX", layouts);
-    }else if(numFilter == 3)
-    {
-        NodoLayout *auxLayer = estructs->layouts->primero;
-        do
-        {
-            Matriz *nueva = new Matriz();
-            mirrorY(auxLayer->layout,nueva);
-            layouts->insertar(auxLayer->numLayout,auxLayer->nameLayout, nueva);
-            auxLayer = auxLayer->next;
-        }while(auxLayer != estructs->layouts->primero);
-       filters->insertar("mirrorY", layouts);
-    }else if(numFilter == 4)
-    {
-        NodoLayout *auxLayer = estructs->layouts->primero;
-        do
-        {
-            Matriz *nueva = new Matriz();
-            Matriz *nuevaXY = new Matriz();
-            mirrorX(auxLayer->layout,nueva);
-            mirrorY(nueva,nuevaXY);
-            layouts->insertar(auxLayer->numLayout,auxLayer->nameLayout, nuevaXY);
-            auxLayer = auxLayer->next;
-        }while(auxLayer != estructs->layouts->primero);
-       filters->insertar("mirrorXY", layouts);
+            cout << "\n\n*************Layout list*************\n";
+            Matriz *mEdit = listLayauts(&imageFilter);
+
+            if(entrada == 1)
+            {
+                grayscale(mEdit);
+                filters->insertar("grayscaleALayer", imageFilter);
+            }else if(entrada == 2)
+            {
+                negative(mEdit);
+                filters->insertar("negativeALayer", imageFilter);
+            }else if(entrada == 3)
+            {
+                Matriz *nueva = new Matriz();
+                mirrorX(mEdit,nueva, imageNew->image_width);
+                mEdit = nueva;
+               filters->insertar("mirrorXALayer", imageFilter);
+            }else if(entrada == 4)
+            {
+                Matriz *nueva = new Matriz();
+                mirrorY(mEdit,nueva, imageFilter.image_height);
+                mEdit = nueva;
+                filters->insertar("mirrorYALayer", imageFilter);
+            }else if(entrada == 5)
+            {
+
+                    Matriz *nueva = new Matriz();
+                    Matriz *nuevaXY = new Matriz();
+                    mirrorX(mEdit,nueva, imageNew->image_width);
+                    mirrorY(nueva,nuevaXY, imageFilter.image_height);
+                    mEdit = nuevaXY;
+               filters->insertar("mirrorXYALayer", imageFilter);
+            }else if(entrada == 6)
+            {
+                Matriz *nueva = new Matriz();
+                collage(mEdit,nueva, x, y);
+                if(x > 0)
+                    imageFilter.image_width = imageFilter.image_width*x;
+                if(y > 0)
+                    imageFilter.image_height = imageFilter.image_height*y;
+                filters->insertar("collageALayer", imageFilter);
+            }
+        }
     }
 }
 
-void mirrorX(Matriz *& original, Matriz *& mirror)
+void mirrorX(Matriz *& original, Matriz *& mirror, int maxX)
 {
     NodoMatriz *aux = original->header;
-    while(aux->next != nullptr)
-        aux = aux->next;
-    int maxColom = aux->x;
-    aux = original->header;
+    int maxColom = maxX;
     while(aux != nullptr)
     {
         NodoMatriz *auxNodo = aux->next;
@@ -437,12 +575,12 @@ void mirrorX(Matriz *& original, Matriz *& mirror)
     }
 }
 
-void mirrorY(Matriz *& original, Matriz *& mirror)
+void mirrorY(Matriz *& original, Matriz *& mirror, int height)
 {
     NodoMatriz *aux = original->header;
     while(aux->down != nullptr)
         aux = aux->down;
-    int maxRow = aux->y;
+    int maxRow = height;
     aux = original->header;
     while(aux != nullptr)
     {
@@ -475,7 +613,6 @@ void collage(Matriz *& original, Matriz *& collage, int x, int y)
     }
 }
 
-
 void grayscale(Matriz *& grayscale)
 {
     NodoMatriz *aux = grayscale->header;
@@ -505,6 +642,69 @@ void negative(Matriz *& negative)
         aux = aux->down;
     }
 }
+
+//****************************************************sub_menu4
+void sub_menu4(CubeImage *&imageNew, ListFilters *filters)
+{
+    system("cls");
+    cout << "***************Manual Editing***************\n";
+    cout << "1 - OG image\n";
+    cout << "2 - Filters\n";
+
+    int entrada;
+    getNumInter(entrada,2,1);
+    Matriz *modifyMatrix;
+
+    if(entrada == 1)
+    {
+        system("cls");
+        cout << "*************Layout list*************\n";
+        modifyMatrix = listLayauts(imageNew);
+    }else
+    {
+
+        CubeImage aux = listFilters(filters);
+        system("cls");
+        cout << "*************Layout list*************\n";
+        modifyMatrix = listLayauts(&aux);
+    }
+
+    int x = -1, y = -1, r = 0, g = 0, b = 0;
+    cout << "Enter Coordenate X: ";
+    getNumInter(x,10000,1);
+    cout << "Enter Coordenate Y: ";
+    getNumInter(y,10000,1);
+
+    cout << "Enter Color R: ";
+    getNumInter(r,255,1);
+    cout << "Enter Color G: ";
+    getNumInter(g,255,1);
+    cout << "Enter Color B: ";
+    getNumInter(b,255,1);
+    modifyMatrix->modify(x, y, r, g, b);
+
+}
+
+//****************************************************sub_menu4
+void sub_menu5(CubeImage *&imageNew, ListFilters *filters)
+{
+    system("cls");
+    cout << "***************EXPORT IMAGE***************\n";
+    cout << "1 - OG image\n";
+    cout << "2 - Filters\n";
+
+    int entrada;
+    getNumInter(entrada,2,1);
+
+    if(entrada == 1)
+        fileHTML(*imageNew);
+    else
+    {
+        CubeImage aux = listFilters(filters);
+        fileHTML(aux);
+    }
+}
+
 
 string RGBToHex(int rNum, int gNum, int bNum)
 {
@@ -580,4 +780,142 @@ void RGBToNegative(int &r, int &g, int &b)
     r = 255 - r;
     g = 255 - g;
     b = 255 - b;
+}
+
+void fileHTML(CubeImage cube)
+{
+    if(cube.image_width != -2)
+    {
+        string nameFile = cube.imageName.substr(0,static_cast<int>(cube.imageName.size())-4);
+        string txtHtml = "";
+        txtHtml += "<!DOCTYPE html>\n<html>\n<head>\n<!-- Link to our stylesheet Painting our Pixel Art -->\n";
+        txtHtml += "<link rel=\"stylesheet\" href=\""+ nameFile +".css\">\n</head>\n<body>\n";
+        txtHtml += "<!-- div container representing the canvas -->\n";
+        txtHtml += "<div class=\"canvas\">\n";
+        txtHtml += "<div class=\"pixel\"></div>\n";
+        txtHtml += "<!-- ...add as many pixels as needed. -->\n";
+
+        for (int i = 0; i<(cube.image_width*cube.image_height);i++) {
+            txtHtml += "  <div class=\"pixel\"></div>\n";
+        }
+        txtHtml += "</body>\n</html>";
+        GuardandoArchivo(txtHtml,"html",nameFile);
+        fileCSS(&cube,nameFile);
+        system(("\\Exports\\" + nameFile + ".html").c_str());
+    }
+
+}
+
+void fileCSS(CubeImage *imageNew, string fileName)
+{
+    string txtscss = "";
+    txtscss += "body {\nbackground: #333333;      /* Background color of the whole page */\n";
+    txtscss += "height: 100vh;            /* 100 viewport heigh units */\n";
+    txtscss += "display: flex;            /* defines a flex container */\n";
+    txtscss += "justify-content: center;  /* centers the canvas horizontally */\n";
+    txtscss += "align-items: center;      /* centers the canvas vertically */\n}\n";
+
+    txtscss += ".canvas \n{\n";
+    txtscss += "width: " + to_string(imageNew->image_width*imageNew->pixel_width) + "px;   /* Width of the canvas */\n";
+    txtscss += "height: " + to_string(imageNew->image_height*imageNew->pixel_height) + "px;  /* Height of the canvas */\n}\n";
+
+    txtscss += ".pixel \n{\n";
+    txtscss += "width: " + to_string(imageNew->pixel_width) + "px;    /* Width of each pixel */\n";
+    txtscss += "height: " + to_string(imageNew->pixel_height) + "px;   /* Height of each pixel */\n";
+    txtscss += "float: left;    /* Everytime it fills the canvas div it will begin a new line */\n";
+    txtscss += "/*box-shadow: 0px 0px 1px #fff;*/  /* Leave commented, showing the pixel boxes */\n}\n";
+
+    txtscss += "/* list of pixels that will be painted */\n";
+
+    NodoLayout *auxLayer = imageNew->layouts->primero->next;
+    string colorPrev = "", color = "";
+    int numRow = 0;
+    do
+    {
+        txtscss += "\n/* " + auxLayer->nameLayout + " */\n";
+        NodoMatriz *auxRow = auxLayer->layout->header->down;
+        while(auxRow != nullptr)
+        {
+            NodoMatriz *auxColumn = auxRow->next;
+            while(auxColumn != nullptr)
+            {
+                color = RGBToHex(auxColumn->r, auxColumn->g, auxColumn->b);
+                if(colorPrev != color && colorPrev !="")
+                    txtscss += "\n{\n background: "+ colorPrev +";\n}\n";
+                else if(colorPrev != "")
+                    txtscss += ",\n";
+                txtscss += ".pixel:nth-child(" + to_string(auxColumn->x + (numRow*imageNew->image_width)) + ")";
+                colorPrev = color;
+                auxColumn = auxColumn->next;
+            }
+            auxRow = auxRow->down;
+            numRow += 1;
+        }
+        auxLayer = auxLayer->next;
+    }while(auxLayer != imageNew->layouts->primero);
+    txtscss += "{\n background: "+ color +";\n}";
+
+    GuardandoArchivo(txtscss, "css", fileName);
+}
+
+Matriz *&listLayauts(CubeImage* layouts)
+{
+    int contLay = 1;
+    NodoLayout *auxLay = layouts->layouts->primero->next;
+    do
+    {
+        cout << to_string(contLay) + " - " + auxLay->nameLayout.substr(0,auxLay->nameLayout.size()-4) + "\n";
+        contLay += 1;
+        auxLay = auxLay->next;
+    }while(auxLay != layouts->layouts->primero);
+
+    int numLay;
+    cout << "Enter the number of the option you wish to select\n";
+    getNumInter(numLay,contLay,1);
+    auxLay = layouts->layouts->primero->next;
+    for (int i = 0 ; i < numLay; i++)
+        auxLay = auxLay->next;
+    return auxLay->layout;
+}
+
+CubeImage &listFilters(ListFilters *&filters)
+{
+    system("cls");
+    cout << "*************Filter list*************\n";
+    int numcapas = 1;
+    NodoFilter *auxFilter = filters->primero;
+    do
+    {
+        cout << to_string(numcapas) + " - " + auxFilter->nameFilter.substr(0,auxFilter->nameFilter.size()-4) + "\n";
+        numcapas += 1;
+        auxFilter = auxFilter->next;
+    }while(auxFilter != filters->primero);
+
+    int numLay;
+    cout << "Enter the number of the option you wish to select\n";
+    getNumInter(numLay,numcapas,1);
+    auxFilter = filters->primero;
+    for (int i = 0 ; i < numLay; i++)
+        auxFilter = auxFilter->next;
+    return auxFilter->filter;
+}
+
+void GuardandoArchivo(string txtArchivo, string tipeFile, string nameFile)
+{
+    std::ofstream nuevo;
+    string path = "";
+    if(tipeFile == "html")
+        path += nameFile + ".html";
+    else if(tipeFile == "css")
+        path += nameFile + ".css";
+    nuevo.open(path, std::ofstream::out);
+    nuevo << txtArchivo << std::endl;
+    nuevo.close();
+
+}
+
+void createFile(string path)
+{
+    if ( access( path.c_str(), 0 ) != 0 )
+        system("mkdir Exports");
 }

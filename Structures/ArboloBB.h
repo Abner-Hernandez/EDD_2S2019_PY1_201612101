@@ -5,6 +5,7 @@
 #include "listcircularde.h"
 
 class ArbolBB {
+private:
     void insertarNodo(NodoAB *&pivote, NodoAB *&insertar);
     void GuardandoArchivo(std::string txtArchivo, std::string postGraph);
     void arbolbinario(NodoAB *&nodo, std::string &txtArchivo);
@@ -13,7 +14,8 @@ class ArbolBB {
     void graficarPostOrden(NodoAB *&pivote , std::string &txtArchivo, ListCircularDE *&lista);
     void graficarPreOrden(NodoAB *&pivote , std::string &txtArchivo, ListCircularDE *& lista);
     void graficarNodesABB(NodoAB *&pivote , std::string &txtArchivo);
-    int contImagen;
+    void getImages(NodoAB *&pivote, ListCircularDE*& images);
+    void getImage(NodoAB *&pivote, CubeImage*& image, std::string nameImage);
 public:
     ArbolBB();
     NodoAB *Raiz;
@@ -23,6 +25,8 @@ public:
     void graficarInorder();
     void graficarPostOrden();
     void graficarPreOrden();
+    void getImages(ListCircularDE*& images);
+    void getImage(CubeImage *&image, std::string nameImage);
 
 private:
 

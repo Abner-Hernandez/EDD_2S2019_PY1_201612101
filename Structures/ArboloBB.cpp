@@ -2,7 +2,6 @@
 
 ArbolBB::ArbolBB() {
     this->Raiz = nullptr;
-    this->contImagen = 0;
 }
 
 void ArbolBB::insertarNodo (NodoAB *&pivote, NodoAB *&insertar) {
@@ -281,4 +280,42 @@ void ArbolBB::GuardandoArchivo(std::string txtArchivo, std::string postGraph)
     nuevo.close();
     system(("dot -Tpng arbol.dot -o arbol"+ postGraph +".png").c_str());
     system(("arbol" + postGraph + ".png").c_str());
+}
+
+void ArbolBB::getImages(ListCircularDE*& images)
+{
+    images = new ListCircularDE();
+    getImages(this->Raiz, images);
+}
+
+void ArbolBB::getImages(NodoAB *&pivote, ListCircularDE*& images)
+{
+    if(pivote == nullptr)
+        return;
+    else
+    {
+        images->insertar(pivote->nuevo->imageName);
+        getImages(pivote->nIzquierdo, images);
+        getImages(pivote->nDerecho, images);
+    }
+}
+
+void ArbolBB::getImage(CubeImage*& image, std::string nameImage)
+{
+    image = new CubeImage();
+    getImage(this->Raiz, image, nameImage);
+}
+
+void ArbolBB::getImage(NodoAB *&pivote, CubeImage*& image, std::string nameImage)
+{
+    if(pivote == nullptr)
+        return;
+    else if (pivote->nuevo->imageName.compare(nameImage) == 0)
+    {
+         image = pivote->nuevo;
+         return;
+    }else {
+        getImage(pivote->nDerecho, image, nameImage);
+        getImage(pivote->nIzquierdo, image, nameImage);
+    }
 }

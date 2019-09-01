@@ -13,4 +13,21 @@ public:
 
 };
 
+struct CubeImage{
+    ListLayout *layouts;
+    int image_width, image_height, pixel_width, pixel_height;
+    std::string imageName, pathImage;
+    CubeImage()
+    {
+        this->layouts = new ListLayout();
+        this->image_width = -2;
+        this->image_height = -2;
+        this->pixel_width = -2;
+        this->pixel_height = -2;
+        this->imageName = "";
+        this->pathImage = "";
+    }
+
+};
+
 #endif // LISTLAYOUT_H
