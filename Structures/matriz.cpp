@@ -343,4 +343,60 @@ void Matriz::guardarArchivo(std::string txtArchivo, std::string postGraph)
     system(("grafica" + postGraph + ".png").c_str());
 }
 
+void Matriz::graficarLineRows(std::string postGraph)
+{
+    if(this->header->next != nullptr || this->header->down != nullptr)
+    {
+        std::string txtArchivo;
+        txtArchivo ="";
+        txtArchivo += "digraph Mass{\n";
+        txtArchivo += "node[shape = record]; \n";
 
+        NodoMatriz *auxDown = this->header->down;
+        txtArchivo += "nodo [label= \"";
+        while(auxDown != nullptr)
+        {
+            NodoMatriz *auxNext = auxDown->next;
+            while(auxNext != nullptr)
+            {
+                if(auxNext  != this->header->down->next)
+                    txtArchivo += "| ("+std::to_string(auxNext->x)+", "+std::to_string(auxNext->y)+") "+std::to_string(auxNext->r)+"-"+std::to_string(auxNext->g)+"-"+std::to_string(auxNext->b)+" ";
+                else
+                    txtArchivo += "("+std::to_string(auxNext->x)+", "+std::to_string(auxNext->y)+") "+std::to_string(auxNext->r)+"-"+std::to_string(auxNext->g)+"-"+std::to_string(auxNext->b)+" ";
+                auxNext = auxNext->next;
+            }
+            auxDown = auxDown->down;
+        }
+        txtArchivo += "\"];\n}\n";
+        guardarArchivo(txtArchivo,postGraph);
+    }
+}
+
+void Matriz::graficarLineColumns(std::string postGraph)
+{
+    if(this->header->next != nullptr || this->header->down != nullptr)
+    {
+        std::string txtArchivo;
+        txtArchivo ="";
+        txtArchivo += "digraph Mass{\n";
+        txtArchivo += "node[shape = record]; \n";
+
+        NodoMatriz *auxNext = this->header->next;
+        txtArchivo += "nodo [label= \"";
+        while(auxNext != nullptr)
+        {
+            NodoMatriz *auxDown = auxNext->down;
+            while(auxDown != nullptr)
+            {
+                if(auxDown  != this->header->next->down)
+                    txtArchivo += "| ("+std::to_string(auxDown->x)+", "+std::to_string(auxDown->y)+") "+std::to_string(auxDown->r)+"-"+std::to_string(auxDown->g)+"-"+std::to_string(auxDown->b)+" ";
+                else
+                    txtArchivo += "("+std::to_string(auxDown->x)+", "+std::to_string(auxDown->y)+") "+std::to_string(auxDown->r)+"-"+std::to_string(auxDown->g)+"-"+std::to_string(auxDown->b)+" ";
+                auxDown = auxDown->next;
+            }
+            auxNext = auxNext->next;
+        }
+        txtArchivo += "\"];\n}\n";
+        guardarArchivo(txtArchivo,postGraph);
+    }
+}

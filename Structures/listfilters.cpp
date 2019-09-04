@@ -48,18 +48,19 @@ void ListFilters::graphFilters()
         NodoFilter *aux = this->primero;
         do
         {
-            txtArchivo += "nodoX"+ aux->nameFilter +"[label= \"X = "+ aux->nameFilter +"\" ];\n";
+            txtArchivo += aux->nameFilter +"[label= \"X = "+ aux->nameFilter +"\" ];\n";
             aux = aux->next;
         }while(aux != this->primero);
 
         aux = this->primero;
         do
         {
-            txtArchivo += aux->nameFilter + " -> " + aux->next->nameFilter + "\n";
+            if(aux->next != nullptr)
+                txtArchivo += aux->nameFilter + " -> " + aux->next->nameFilter + "\n";
             aux = aux->next;
          }while(aux != this->primero);
 
-        txtArchivo ="}";
+        txtArchivo += "}";
 
         guardarArchivo(txtArchivo, "filters");
     }
@@ -68,10 +69,10 @@ void ListFilters::graphFilters()
 void ListFilters::guardarArchivo(std::string txtArchivo, std::string postGraph)
 {
     std::ofstream nuevo;
-    nuevo.open("matriz.dot", std::ofstream::out);
+    nuevo.open("filter.dot", std::ofstream::out);
     nuevo << txtArchivo << std::endl;
 
     nuevo.close();
-    system(("dot -Tpng matriz.dot -o grafica"+ postGraph +".png").c_str());
+    system(("dot -Tpng filter.dot -o grafica"+ postGraph +".png").c_str());
     system(("grafica" + postGraph + ".png").c_str());
 }

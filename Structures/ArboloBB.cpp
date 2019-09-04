@@ -134,13 +134,13 @@ void ArbolBB::arbolbinario( NodoAB *&nodo, std::string &txtArchivo)
         if(nodo->nIzquierdo != nullptr)
         {
             txtArchivo += nodo->nIzquierdo->nuevo->imageName + "[label= \" <A0> |";
-            txtArchivo += " Image: "+nodo->nIzquierdo->nuevo->imageName+" | <A1> \"];\n";
+            txtArchivo += " Image: "+nodo->nIzquierdo->nuevo->imageName + " \\n pixel: "+ std::to_string(nodo->nuevo->pixel_width) + "*" + std::to_string(nodo->nuevo->pixel_height) + "\\ndimension:" + std::to_string(nodo->nuevo->image_width) + "*" + std::to_string(nodo->nuevo->image_height) +" | <A1> \"];\n";
             txtArchivo += nodo->nuevo->imageName+ ":A0" +" -> "+ nodo->nIzquierdo->nuevo->imageName+";\n";
         }
         if(nodo->nDerecho != nullptr)
         {
         txtArchivo += nodo->nDerecho->nuevo->imageName+"[label= \" <A0> |";
-        txtArchivo += " Image: "+nodo->nDerecho->nuevo->imageName+" | <A1> \" ];\n";
+        txtArchivo += " Image: "+nodo->nDerecho->nuevo->imageName + " \\n pixel: "+ std::to_string(nodo->nuevo->pixel_width) + "*" + std::to_string(nodo->nuevo->pixel_height) + "\\ndimension:" + std::to_string(nodo->nuevo->image_width) + "*" + std::to_string(nodo->nuevo->image_height) + " | <A1> \" ];\n";
         txtArchivo += nodo->nuevo->imageName + ":A1" +" -> "+ nodo->nDerecho->nuevo->imageName+";\n";
         }
         
@@ -152,6 +152,8 @@ void ArbolBB::arbolbinario( NodoAB *&nodo, std::string &txtArchivo)
 
 void ArbolBB::graficarArbol()
 {
+    if(this->Raiz != nullptr)
+    {
         std::string txtArchivo;
         txtArchivo ="";
         txtArchivo += "digraph Mass{\n";
@@ -159,13 +161,14 @@ void ArbolBB::graficarArbol()
         txtArchivo += "graph[nodesep = 0.5]; \n";
 
         txtArchivo += this->Raiz->nuevo->imageName+"[label= \"  <A0> |";
-        txtArchivo += " Image: "+this->Raiz->nuevo->imageName+ " | <A1> \"];\n";
+        txtArchivo += " Image: "+this->Raiz->nuevo->imageName + " \\n pixel: "+ std::to_string(this->Raiz->nuevo->pixel_width) + "*" + std::to_string(this->Raiz->nuevo->pixel_height) + "\\ndimension:" + std::to_string(this->Raiz->nuevo->image_width) + "*" + std::to_string(this->Raiz->nuevo->image_height) + " | <A1> \"];\n";
         arbolbinario(this->Raiz, txtArchivo);
             
         txtArchivo += "\n} ";
         GuardandoArchivo(txtArchivo, "binario");
-}
 
+    }
+}
 void ArbolBB::graficarInorder()
 {
     std::string txtArchivo;
