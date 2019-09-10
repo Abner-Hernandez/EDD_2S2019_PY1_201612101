@@ -277,12 +277,12 @@ void ArbolBB::graficarPreOrden(NodoAB *&pivote, std::string &txtArchivo, ListCir
 void ArbolBB::GuardandoArchivo(std::string txtArchivo, std::string postGraph)
 {
     std::ofstream nuevo;
-    nuevo.open("arbol.dot", std::ofstream::out);
+    nuevo.open("Exports\\arbol.dot", std::ofstream::out);
     nuevo << txtArchivo << std::endl;
 
     nuevo.close();
-    system(("dot -Tpng arbol.dot -o arbol"+ postGraph +".png").c_str());
-    system(("arbol" + postGraph + ".png").c_str());
+    system(("dot -Tpng Exports\\arbol.dot -o Exports\\arbol"+ postGraph +".png").c_str());
+    system(("Exports\\arbol" + postGraph + ".png").c_str());
 }
 
 void ArbolBB::getImages(ListCircularDE*& images)

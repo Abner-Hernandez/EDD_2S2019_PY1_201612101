@@ -7,10 +7,10 @@ class NodoFilter
 {
 public:
     NodoFilter();
-    NodoFilter(CubeImage Filter, std::string nameFilter);
+    NodoFilter(CubeImage *&Filter, std::string nameFilter);
     std::string nameFilter;
     NodoFilter *next, *previous;
-    CubeImage filter;
+    CubeImage *filter;
 };
 
 #endif // NODOFILTER_H

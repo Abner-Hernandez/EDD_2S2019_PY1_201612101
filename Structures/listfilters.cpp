@@ -5,7 +5,7 @@ ListFilters::ListFilters()
     this->primero = nullptr;
 }
 
-void ListFilters::insertar(std::string nameFilter, CubeImage filter)
+void ListFilters::insertar(std::string nameFilter, CubeImage *&filter)
 {
     NodoFilter *nuevo = new NodoFilter(filter, nameFilter);
 
@@ -69,10 +69,10 @@ void ListFilters::graphFilters()
 void ListFilters::guardarArchivo(std::string txtArchivo, std::string postGraph)
 {
     std::ofstream nuevo;
-    nuevo.open("filter.dot", std::ofstream::out);
+    nuevo.open("Exports\\filter.dot", std::ofstream::out);
     nuevo << txtArchivo << std::endl;
 
     nuevo.close();
-    system(("dot -Tpng filter.dot -o grafica"+ postGraph +".png").c_str());
-    system(("grafica" + postGraph + ".png").c_str());
+    system(("dot -Tpng Exports\\filter.dot -o Exports\\grafica"+ postGraph +".png").c_str());
+    system(("Exports\\grafica" + postGraph + ".png").c_str());
 }

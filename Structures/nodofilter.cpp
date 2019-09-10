@@ -7,7 +7,7 @@ NodoFilter::NodoFilter()
     this->nameFilter = "";
 }
 
-NodoFilter::NodoFilter(CubeImage filter, std::string nameFilter)
+NodoFilter::NodoFilter(CubeImage *&filter, std::string nameFilter)
 {
     this->filter = filter;
     this->next = nullptr;

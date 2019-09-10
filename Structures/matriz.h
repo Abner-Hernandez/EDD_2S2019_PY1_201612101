@@ -10,6 +10,7 @@ class Matriz
     void graficarRecursivo(NodoMatriz*& nodo, std::string &txtArchivo);
 public:
     Matriz();
+    Matriz(Matriz &matriz);
     NodoMatriz *header;
     void add(int x, int y, int r, int g, int b);
     void deleteM(int x, int y);

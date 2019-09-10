@@ -5,6 +5,11 @@ Matriz::Matriz()
     this->header = new NodoMatriz();
 }
 
+Matriz::Matriz(Matriz &matriz)
+{
+    this->header = matriz.header;
+}
+
 void Matriz::add(int x, int y, int r, int g, int b)
 {
     NodoMatriz *insert = new NodoMatriz(x, y, r, g, b);
@@ -51,6 +56,12 @@ void Matriz::add(int x, int y, int r, int g, int b)
                         insert->up = auxY;
                         auxY->down = insert;
                         break;
+                    }else if(auxY->y == y)
+                    {
+                        auxY->r = r;
+                        auxY->g = g;
+                        auxY->b = b;
+                        return;
                     }
                     auxY = auxY->down;
                 }
@@ -335,12 +346,12 @@ void Matriz::graficarRecursivo(NodoMatriz*& nodo, std::string &txtArchivo)
 void Matriz::guardarArchivo(std::string txtArchivo, std::string postGraph)
 {
     std::ofstream nuevo;
-    nuevo.open("matriz.dot", std::ofstream::out);
+    nuevo.open("Exports\\matriz.dot", std::ofstream::out);
     nuevo << txtArchivo << std::endl;
 
     nuevo.close();
-    system(("dot -Tpng matriz.dot -o grafica"+ postGraph +".png").c_str());
-    system(("grafica" + postGraph + ".png").c_str());
+    system(("dot -Tpng Exports\\matriz.dot -o Exports\\grafica"+ postGraph +".png").c_str());
+    system(("Exports\\grafica" + postGraph + ".png").c_str());
 }
 
 void Matriz::graficarLineRows(std::string postGraph)

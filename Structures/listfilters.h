@@ -7,7 +7,7 @@ class ListFilters
 public:
     ListFilters();
     NodoFilter *primero;
-    void insertar(std::string nameFilter, CubeImage filter);
+    void insertar(std::string nameFilter, CubeImage *&filter);
     void graphFilters();
     void guardarArchivo(std::string txtArchivo, std::string postGraph);
 };
