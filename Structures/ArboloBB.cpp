@@ -131,21 +131,21 @@ void ArbolBB::arbolbinario( NodoAB *&nodo, std::string &txtArchivo)
         {
         //std::cout << "\n" << "**************a**************";
         
-        if(nodo->nIzquierdo != nullptr)
-        {
-            txtArchivo += nodo->nIzquierdo->nuevo->imageName + "[label= \" <A0> |";
-            txtArchivo += " Image: "+nodo->nIzquierdo->nuevo->imageName + " \\n pixel: "+ std::to_string(nodo->nuevo->pixel_width) + "*" + std::to_string(nodo->nuevo->pixel_height) + "\\ndimension:" + std::to_string(nodo->nuevo->image_width) + "*" + std::to_string(nodo->nuevo->image_height) +" | <A1> \"];\n";
-            txtArchivo += nodo->nuevo->imageName+ ":A0" +" -> "+ nodo->nIzquierdo->nuevo->imageName+";\n";
-        }
-        if(nodo->nDerecho != nullptr)
-        {
-        txtArchivo += nodo->nDerecho->nuevo->imageName+"[label= \" <A0> |";
-        txtArchivo += " Image: "+nodo->nDerecho->nuevo->imageName + " \\n pixel: "+ std::to_string(nodo->nuevo->pixel_width) + "*" + std::to_string(nodo->nuevo->pixel_height) + "\\ndimension:" + std::to_string(nodo->nuevo->image_width) + "*" + std::to_string(nodo->nuevo->image_height) + " | <A1> \" ];\n";
-        txtArchivo += nodo->nuevo->imageName + ":A1" +" -> "+ nodo->nDerecho->nuevo->imageName+";\n";
-        }
-        
-        arbolbinario(nodo->nIzquierdo, txtArchivo);
-        arbolbinario(nodo->nDerecho, txtArchivo);        
+            if(nodo->nIzquierdo != nullptr)
+            {
+                txtArchivo += nodo->nIzquierdo->nuevo->imageName + "[label= \" <A0> |";
+                txtArchivo += " Image: "+nodo->nIzquierdo->nuevo->imageName + " \\n pixel: "+ std::to_string(nodo->nIzquierdo->nuevo->pixel_width) + "*" + std::to_string(nodo->nIzquierdo->nuevo->pixel_height) + "\\ndimension:" + std::to_string(nodo->nIzquierdo->nuevo->image_width) + "*" + std::to_string(nodo->nIzquierdo->nuevo->image_height) +" | <A1> \"];\n";
+                txtArchivo += nodo->nuevo->imageName+ ":A0" +" -> "+ nodo->nIzquierdo->nuevo->imageName+";\n";
+            }
+            if(nodo->nDerecho != nullptr)
+            {
+                txtArchivo += nodo->nDerecho->nuevo->imageName+"[label= \" <A0> |";
+                txtArchivo += " Image: "+nodo->nDerecho->nuevo->imageName + " \\n pixel: "+ std::to_string(nodo->nDerecho->nuevo->pixel_width) + "*" + std::to_string(nodo->nDerecho->nuevo->pixel_height) + "\\ndimension:" + std::to_string(nodo->nDerecho->nuevo->image_width) + "*" + std::to_string(nodo->nDerecho->nuevo->image_height) + " | <A1> \" ];\n";
+                txtArchivo += nodo->nuevo->imageName + ":A1" +" -> "+ nodo->nDerecho->nuevo->imageName+";\n";
+            }
+
+            arbolbinario(nodo->nIzquierdo, txtArchivo);
+            arbolbinario(nodo->nDerecho, txtArchivo);
         
         }
 }
