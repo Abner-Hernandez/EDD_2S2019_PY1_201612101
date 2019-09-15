@@ -33,9 +33,7 @@ void pixelNonMosaic(CubeImage *&imageNew, string &txtscss);
 void pixelMosaic(CubeImage *&imageNew, string &txtscss, CubeImage *&original);
 void pixelCollage(CubeImage *&imageNew, string &txtscss);
 void createMatrizImage(CubeImage *&imageNew, Matriz *& image);
-
 void verificarColors(string &pixels, int ini, int end, int factor);
-
 void getNumInter(int &num, int lS, int lI);
 void listLayouts(CubeImage *layouts, Matriz *&matriz);
 void listFilters(ListFilters *filters, string &nameFilter, CubeImage *&filter);
@@ -53,65 +51,7 @@ int main()
     ArbolBB *images = new ArbolBB();
     ListFilters *filters = new ListFilters();
     cout << "\"Hello World!\"" << endl;
-
-    /*
-    CubeImage *c1 = new CubeImage();
-    c1->imageName = "image10.csv";
-    CubeImage *c2 = new CubeImage();
-    c2->imageName = "image5.csv";
-    CubeImage *c3 = new CubeImage();
-    c3->imageName = "image15.csv";
-    CubeImage *c4 = new CubeImage();
-    c4->imageName = "image7.csv";
-    CubeImage *c5 = new CubeImage();
-    c5->imageName = "image11.csv";
-    CubeImage *c6 = new CubeImage();
-    c6->imageName = "image02.csv";
-    CubeImage *c7 = new CubeImage();
-    c7->imageName = "image05.csv";
-    CubeImage *c8 = new CubeImage();
-    c8->imageName = "image00.csv";
-
-    images->insertarNodo(c1);
-    images->insertarNodo(c2);
-    images->insertarNodo(c3);
-    images->insertarNodo(c4);
-    images->insertarNodo(c5);
-    images->insertarNodo(c6);
-    images->insertarNodo(c7);
-    images->insertarNodo(c8);
-    //images->graficarArbol();
-    //nuevo->graficarInorder();
-    //nuevo->graficarPreOrden();
-    //nuevo->graficarPostOrden();
-    */
-
     menu(imageNew, images, filters);
-
-    /*
-    Matriz *matriz = new Matriz();
-
-    matriz->add(15,10,255,229,204);
-    matriz->add(3,6,255,229,204);
-    matriz->add(5,2,255,229,204);
-    matriz->add(16,11,255,229,204);
-    matriz->add(4,1,255,229,204);
-    matriz->add(1,1,255,229,204);
-    matriz->add(2,2,255,229,204);
-    matriz->add(2,3,255,229,204);
-    matriz->add(15,1,255,229,204);
-    matriz->add(15,2,255,229,204);
-    matriz->add(15,3,255,229,204);
-
-    matriz->graficar("plan1");
-
-    matriz->deleteM(3,6);
-    matriz->deleteM(2,2);
-
-    matriz->graficar("plan2");
-
-    */
-    //system("PAUSE");
     return 0;
 }
 
@@ -135,7 +75,6 @@ void getNumInter(int &num, int lS, int lI)
     }
 }
 
-
 void menu(CubeImage *&imageNew, ArbolBB *&images, ListFilters *&filters)
 {
     while(true)
@@ -157,7 +96,7 @@ void menu(CubeImage *&imageNew, ArbolBB *&images, ListFilters *&filters)
         getNumInter(entrada,7,1);
 
         switch (entrada) {
-        case 1: sub_menu1(imageNew, images);
+        case 1: sub_menu1(imageNew, images); filters = new ListFilters();
             break;
         case 2: sub_menu2(imageNew, images); filters = new ListFilters();
             break;
@@ -194,7 +133,6 @@ void sub_menu1(CubeImage *&imageNew, ArbolBB *&images)
             break;
         }
     }
-    //***** Read file Config ******
     images->insertarNodo(imageNew);
 }
 
