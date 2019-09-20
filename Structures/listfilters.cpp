@@ -41,7 +41,7 @@ void ListFilters::graphFilters()
         std::string txtArchivo;
         txtArchivo ="";
         txtArchivo += "digraph Mass{\n";
-        txtArchivo += "rankdir = TB; \n";
+        txtArchivo += "rankdir = LR; \n";
         txtArchivo += "node[shape = rectangle, height = 1, width = 1]; \n";
         txtArchivo += "graph[nodesep = 0.5]; \n";
 

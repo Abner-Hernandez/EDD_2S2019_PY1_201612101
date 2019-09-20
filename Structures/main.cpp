@@ -408,7 +408,6 @@ void crearFilter(ListFilters *&filters, CubeImage *&imageNew)
                filters->insertar("negative", imageFilter);
             }else if(entrada == 3)
             {
-                //create layers
                 NodoLayout *auxLayer = imageFilter->layouts->primero->next;
 
                 do
@@ -421,18 +420,15 @@ void crearFilter(ListFilters *&filters, CubeImage *&imageNew)
                 filters->insertar("mirrorX", imageFilter);
             }else if(entrada == 4)
             {
-                NodoLayout *auxLayer = imageFilter->layouts->primero->previous;
-                int numLay = 1;
-                ListLayout *listAux = new ListLayout();
-                listAux->insertar(0,"config");
+                NodoLayout *auxLayer = imageFilter->layouts->primero->next;
+
                 do
                 {
                     Matriz *nueva = new Matriz();
-                    mirrorY(auxLayer->layout,nueva, imageFilter->image_height);
-                    listAux->insertar(numLay++,auxLayer->nameLayout,nueva);
-                    auxLayer = auxLayer->previous;
+                    mirrorY(auxLayer->layout,nueva , imageNew->image_height);
+                    auxLayer->layout = nueva;
+                    auxLayer = auxLayer->next;
                 }while(auxLayer != imageFilter->layouts->primero);
-                imageFilter->layouts = listAux;
                 filters->insertar("mirrorY", imageFilter);
             }else if(entrada == 5)
             {
