@@ -170,7 +170,7 @@ void readFile(CubeImage *&imageNew, string path)
                 {
                     if (firstword == false)
                     {
-                        if(word == "layer")
+                        if(0 == stricmp(word.c_str(), "layer"))
                             layer = true;
                         firstword = true;
                         word = "";
@@ -226,7 +226,7 @@ void fileConfig(CubeImage *&imageNew)
                     {
                         if (firstword == false)
                         {
-                            if(word == "config")
+                            if(0 == stricmp(word.c_str(), "config"))
                                 config = true;
                             firstword = true;
                             word = "";
